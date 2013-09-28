@@ -18,18 +18,16 @@ public class Crawler {
 	private static final int intervalOfRefreshToken = 1000 * 60 * 60 * 23;	// 两次刷新token之间的时间间隔
 	
 	// 请求控制相关
-	private static final int intervalOfRequest = 1000 * 5;		// 每次请求之间的间隔
+	private static final int intervalOfRequest = 1000 * 10;		// 每次请求之间的间隔
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		
-		Date currentTime = Calendar.getInstance().getTime();
-		
 		// 生成token
 		AccessToken.generate();
-		lastRefreshTokenTime = currentTime;
+		lastRefreshTokenTime = Calendar.getInstance().getTime();
 		
 		while (true) {
 			
@@ -43,10 +41,13 @@ public class Crawler {
 			}
 			
 			// 检测是否需要刷新token
+			Date currentTime = Calendar.getInstance().getTime();
 			if (currentTime.getTime() - lastRefreshTokenTime.getTime() > intervalOfRefreshToken) {
 				AccessToken.generate();
 				lastRefreshTokenTime = currentTime;
 			}
+			
+			System.gc();
 		}
 	}
 	
